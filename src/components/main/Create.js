@@ -2,115 +2,108 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import { methods } from '../../database';
-const { createSwitch } = methods;
+const { createSwitch, unusedSwitch } = methods;
 
 class Create extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      submitted: false,
-      created: false,
-      switch_id: '',
-      created_at: 0,
-      name: '',
-      name_error: false,
-      name_error_message: '',
-      active: false,
-      secured: false,
-      passkey: '',
-      passkey_error: false,
-      passkey_error_message: '',
-      passkey_visible: false,
-    }
+    const { switchName, setSwitchName } = props;
+    this.state = { 
+      ...this.initState(switchName),
+      setSwitchName
+    };
+  }
+
+  initState = name => ({
+    createdAt: 0,
+    name,
+    nameErr: '',
+    active: false,
+  })
+
+  checkSwitchName = switchName => {
+    let err = '';
+    if (switchName.length < 3) err = 'switch name must have at least 3 letters';
+    else if (switchName.length > 19) err = 'switch name should have less than 20 chars'
+    else if (switchName.includes(' ')) err = 'switch name must not include a space'
+    return err;
   }
 
   handleChange = (prop, event) => {
-    const parse = ['active', 'secured', 'passkey_visible']
+    const parse = ['active']
     const state = this.state;
-    const value = event.target.value;
+    const value = event.target.value.toLowerCase();
     state[prop] = parse.includes(prop) ? JSON.parse(value) : value;
 
-    if (prop === 'name') {
-      state.name_error = true;
-      if (!value) state.name_error_message = "you must provide a name"
-      else if (value.includes(' ')) state.name_error_message = "name must not include space"
-      else { state.name_error = false; state.name_error_message = "" }
-    }
-    else if (prop === 'passkey') {
-      state.passkey_error = true;
-      if (value.length < 3) state.passkey_error_message = "your passkey must provide at least 3 chars"
-      else { state.passkey_error = false; state.passkey_error_message = "" }
-    }
+    // In-time error catching
+    if (prop === 'name') state.nameErr = this.checkSwitchName(state.name);
 
-    console.log(state);
     this.setState(state);
   }
 
   handleSubmit = event => {
-    this.setState({ submitted: true });
-    const { name, active, secured, passkey } = this.state;
-    const created_at = Date.now();
-    createSwitch({ name, active, secured, passkey, created_at })
-      .then(switch_id => this.setState({ created: true, switch_id, created_at }))
     event.preventDefault();
+    const { setSwitchName, name, active } = this.state;
+    const createdAt = Date.now();
+    unusedSwitch(name)
+      .then(isUnused => {
+        if (isUnused) {
+          createSwitch(name, { name, active, createdAt })
+            .then(() => {
+              setSwitchName(name);
+              this.setState({ createdAt });
+            })
+        } else this.setState({ nameErr: "this name is taken, please try another" })
+      })
+  }
+
+  handleReset = () => {
+    const { setSwitchName } = this.state;
+    setSwitchName('');
+    this.setState(this.initState(''));
   }
 
   render() {
-    const {
-      submitted, created, switch_id, name, name_error,
-      name_error_message, active, secured,
-      passkey, passkey_error, passkey_error_message,
-      passkey_visible } = this.state;
-    const error = name_error || passkey_error;
+    const { name, nameErr, active } = this.state;
+    const { switchName } = this.props;
     return (
       <section>
         <Link to='/'>
           <button>Return to homepage</button>
         </Link>
         <h3>Create</h3>
-        <p>Make a new switch by completing the form below</p>
-        {!submitted &&
-          <form onSubmit={this.handleSubmit}>
-            <section>
-              <label htmlFor='name'>Switch's name:</label>
-              <input type="text" value={name} placeholder="team-bee" onChange={e => this.handleChange('name', e)} />
-              {name_error && <p>* {name_error_message}</p>}
-            </section>
-            <section>
-              <label htmlFor='active'>Activate switch:</label>
-              <input type="radio" id="active-true" name="active" value={true} onChange={e => this.handleChange('active', e)} checked={active} />
-              <label htmlFor="active-true">yes</label>
-              <input type="radio" id="active-false" name="active" value={false} onChange={e => this.handleChange('active', e)} checked={!active} />
-              <label htmlFor="active-false">no</label>
-            </section>
-            <section>
-              <label htmlFor='secured'>Make secured:</label>
-              <input type="radio" id="secured-true" name="secured" value={true} onChange={e => this.handleChange('secured', e)} checked={secured} />
-              <label htmlFor="secured-true">yes</label>
-              <input type="radio" id="secured-false" name="secured" value={false} onChange={e => this.handleChange('secured', e)} checked={!secured} />
-              <label htmlFor="secured-false">no</label>
-              {secured &&
-                <section>
-                  <label htmlFor='name'>Switch passkey:</label>
-                  <input type={passkey_visible ? "text" : "password"} placeholder="codingRocks" value={passkey} onChange={e => this.handleChange('passkey', e)} />
-                  <button type="button" value={!passkey_visible} onClick={e => this.handleChange('passkey_visible', e)}>
-                    {passkey_visible ? "hide" : "show"} passkey
-                </button>
-                  {passkey_error && <p>* {passkey_error_message}</p>}
-                </section>
-              }
-            </section>
 
-            {!error && !!name && <input type="submit" value="Create switch" />}
-          </form>
-        }
-        {created &&
-          <section>
-            Created successfully at {switch_id}
-            <br />
-            <Link to={`/manage/${switch_id}`}>
-              <button>Manage your switch</button>
-            </Link>
+        {switchName
+          ? <section>
+            You have a switch at {name}
+            <ul>
+              <li>
+                <Link to={`/manage`}>
+                  <button>Manage your switch</button>
+                </Link>
+              </li>
+              <li>
+                <button onClick={this.handleReset}>Create another switch</button>
+              </li>
+            </ul>
+          </section>
+          : <section>
+            <p>Make a new switch by completing the form below</p>
+            <form onSubmit={this.handleSubmit}>
+              <section>
+                <label htmlFor='name'>Switch's name:</label>
+                <input type="text" value={name} placeholder="team-bee" onChange={e => this.handleChange('name', e)} />
+                {!!nameErr && <p>* {nameErr}</p>}
+              </section>
+              <section>
+                <label htmlFor='active'>Activate switch:</label>
+                <input type="radio" id="active-true" name="active" value={true} onChange={e => this.handleChange('active', e)} checked={active} />
+                <label htmlFor="active-true">yes</label>
+                <input type="radio" id="active-false" name="active" value={false} onChange={e => this.handleChange('active', e)} checked={!active} />
+                <label htmlFor="active-false">no</label>
+              </section>
+              <input type="submit" value="Create switch" />
+            </form>
           </section>
         }
       </section>

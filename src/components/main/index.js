@@ -9,5 +9,5 @@ export {
   Home,
   Help,
   Create,
-  Manage
+  Manage,
 }

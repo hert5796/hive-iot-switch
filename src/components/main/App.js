@@ -3,6 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 
 import { Home, Help, Create, Manage } from './'
 
+import 'bulma/css/bulma.css'
 
 class App extends Component {
 	constructor(props) {
@@ -12,7 +13,15 @@ class App extends Component {
 		}
 	}
 
-	setSwitchName = switchName => this.setState({ switchName });
+	componentWillMount() {
+		const switchName = localStorage.getItem('switchName');
+		!!switchName && this.setState({ switchName });
+	}
+
+	setSwitchName = switchName => {
+		localStorage.setItem('switchName', switchName);
+		this.setState({ switchName });
+	};
 
 	render() {
 		const { switchName } = this.state;

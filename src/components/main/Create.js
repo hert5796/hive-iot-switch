@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt, faPlus, faCheck, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+
+import { ReturnHome } from '../mini'
+
 import { methods } from '../../database';
 const { createSwitch, unusedSwitch } = methods;
+
+
 
 class Create extends Component {
   constructor(props) {
     super(props);
     const { switchName, setSwitchName } = props;
-    this.state = { 
+    this.state = {
       ...this.initState(switchName),
       setSwitchName
     };
@@ -45,7 +52,7 @@ class Create extends Component {
     event.preventDefault();
     const { setSwitchName, name, active } = this.state;
     const createdAt = Date.now();
-    unusedSwitch(name)
+    !!name && unusedSwitch(name)
       .then(isUnused => {
         if (isUnused) {
           createSwitch(name, { name, active, createdAt })
@@ -67,45 +74,110 @@ class Create extends Component {
     const { name, nameErr, active } = this.state;
     const { switchName } = this.props;
     return (
-      <section>
-        <Link to='/'>
-          <button>Return to homepage</button>
-        </Link>
-        <h3>Create</h3>
+      <section className='hero is-fullheight-with-navbar'>
+        <ReturnHome />
+        <section className='hero-body'> 
+          <section className='container has-text-centered'>
+            <section className='content'>
+              {switchName
+                ? <section>
+                  <p>You already have a switch!</p>
+                  <section className='section'>
+                    <h1 className='is-large'>{name}</h1>
+                  </section>
+                  <section className=''>
+                    <p>
+                      <Link to={`/manage`}>
+                        <button className='button is-warning'>
+                          <span className="icon">
+                            <FontAwesomeIcon icon={faPencilAlt} />
+                          </span>
+                          <span>
+                            Manage your switch
+                          </span>
+                        </button>
+                      </Link>
+                    </p>
+                    <p>
+                      <button className='button is-primary' onClick={this.handleReset}>
+                        <span className="icon">
+                          <FontAwesomeIcon icon={faPlus} />
+                        </span>
+                        <span>
+                          Create another switch
+                        </span>
+                      </button>
+                    </p>
+                  </section>
+                </section>
+                : <section>
+                  <p className='section'>Make a new switch by completing the form below</p>
+                  <form className='has-text-left' onSubmit={this.handleSubmit}>
+                    <section className='field is-horizontal'>
+                      <section className='field-label is-normal'>
+                        <label className='label' htmlFor='name'>Switch's name </label>
+                      </section>
 
-        {switchName
-          ? <section>
-            You have a switch at {name}
-            <ul>
-              <li>
-                <Link to={`/manage`}>
-                  <button>Manage your switch</button>
-                </Link>
-              </li>
-              <li>
-                <button onClick={this.handleReset}>Create another switch</button>
-              </li>
-            </ul>
+                      <section className='field-body'>
+                        <section className='field'>
+                          <section className='control has-icons-left'>
+                            <input className='input' type="text" value={name} placeholder="team-bee" onChange={e => this.handleChange('name', e)} />
+                            <span class="icon is-small is-left">
+                              <FontAwesomeIcon icon={faToggleOn} />
+                            </span>
+                          </section>
+                          <p class="help is-danger">
+                            {!!nameErr && <p>* {nameErr}</p>}
+                          </p>
+                        </section>
+                      </section>
+                    </section>
+
+                    <section className='field is-horizontal'>
+
+                      <section className="field-label">
+                        <label className="label" htmlFor='active'>Activate switch?</label>
+                      </section>
+
+                      <section className="field-body">
+                        <section className="field is-narrow">
+                          <section className="control">
+                            <label className="radio">
+                              <input type="radio" id="active-true" name="active" value={true} onChange={e => this.handleChange('active', e)} checked={active} />
+                              Yes
+                            </label>
+                            <label className="radio">
+                              <input type="radio" id="active-false" name="active" value={false} onChange={e => this.handleChange('active', e)} checked={!active} />
+                              No
+                            </label>
+                          </section>
+                        </section>
+                      </section>
+                    </section>
+                    <br />
+                    <div class="field is-horizontal">
+                      <div class="field-label"></div>
+                      <div class="field-body">
+                        <div class="field">
+                          <div class="control">
+                            <button className='button is-warning' type="submit">
+                              <span className="icon">
+                                <FontAwesomeIcon icon={faCheck} />
+                              </span>
+                              <span>
+                                Create switch
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </section>
+              }
+            </section>
           </section>
-          : <section>
-            <p>Make a new switch by completing the form below</p>
-            <form onSubmit={this.handleSubmit}>
-              <section>
-                <label htmlFor='name'>Switch's name:</label>
-                <input type="text" value={name} placeholder="team-bee" onChange={e => this.handleChange('name', e)} />
-                {!!nameErr && <p>* {nameErr}</p>}
-              </section>
-              <section>
-                <label htmlFor='active'>Activate switch:</label>
-                <input type="radio" id="active-true" name="active" value={true} onChange={e => this.handleChange('active', e)} checked={active} />
-                <label htmlFor="active-true">yes</label>
-                <input type="radio" id="active-false" name="active" value={false} onChange={e => this.handleChange('active', e)} checked={!active} />
-                <label htmlFor="active-false">no</label>
-              </section>
-              <input type="submit" value="Create switch" />
-            </form>
-          </section>
-        }
+        </section>
       </section>
     )
   }

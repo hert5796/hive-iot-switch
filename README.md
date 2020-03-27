@@ -1,68 +1,16 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+﻿# Hive IoT Switch
 
-## Available Scripts
+[Hive Manchester website](http://www.hivelearning.net/)
 
-In the project directory, you can run:
+## Motivation
 
-### `yarn start`
+Hive learning network delivers digital making activities for 13-18 year olds, outside or within formal education. One such activity enourages the young participants to consider the 'Internet of Things' through a simple intruder alarm system.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+As part of the intruder alarm IoT activity, participants complete a set-up that uses a motion sensor (usually a passive infrared or ultrasonic) to detect motion and then using the standard [python requests](https://pypi.org/project/requests/) library and web services like [Pushbullet](https://www.pushbullet.com/) they are able to alert a phone or tablet and email address to the motion detected.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+At some of the previous digital making sessions, a few advanced participants have requested some way to alert  a second raspbery pi to the detected motion. This is usually because setting up the sensors on their original raspberry pi uses up some of the GPIO pins and so they are unable to attach many of the provided raspberry pi attachments that require all the GPIO pins to fit on like the [blinkt lights](https://shop.pimoroni.com/products/blinkt) or [explorer hat](https://shop.pimoroni.com/products/explorer-hat).
 
-### `yarn test`
+To solve this issue, I considered a few possibilities and decided to go with the option that should be most convienent for the participants. Since, the project already requires them to use the python requests library to make http requests to Pushbullet's api, this iot-switch simply provides a new http endpoint that acts a toggle switch. The other raspberry pi can then poll the switch for a trigger.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Usuage
+The hive-iot-switch app allows users to create and manage a switch intended for use as described above. Once the switch is created, it's ready to use. The manage tab allows uses to manually toggle the switch.

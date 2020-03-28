@@ -122,11 +122,11 @@ class Create extends Component {
                         <section className='field'>
                           <section className='control has-icons-left'>
                             <input className='input' type="text" value={name} placeholder="team-bee" onChange={e => this.handleChange('name', e)} />
-                            <span class="icon is-small is-left">
+                            <span className="icon is-small is-left">
                               <FontAwesomeIcon icon={faToggleOn} />
                             </span>
                           </section>
-                          <p class="help is-danger">
+                          <p className="help is-danger">
                             {!!nameErr && <p>* {nameErr}</p>}
                           </p>
                         </section>
@@ -155,11 +155,11 @@ class Create extends Component {
                       </section>
                     </section>
                     <br />
-                    <div class="field is-horizontal">
-                      <div class="field-label"></div>
-                      <div class="field-body">
-                        <div class="field">
-                          <div class="control">
+                    <section className="field is-horizontal">
+                      <section className="field-label"></section>
+                      <section className="field-body">
+                        <section className="field">
+                          <section className="control">
                             <button className='button is-warning' type="submit">
                               <span className="icon">
                                 <FontAwesomeIcon icon={faCheck} />
@@ -168,10 +168,10 @@ class Create extends Component {
                                 Create switch
                               </span>
                             </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                          </section>
+                        </section>
+                      </section>
+                    </section>
                   </form>
                 </section>
               }

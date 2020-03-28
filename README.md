@@ -2,6 +2,8 @@
 
 [Hive Manchester website](http://www.hivelearning.net/)
 
+[Web app version](http://hive-iot-switch.web.app/) 
+
 ## Motivation
 
 Hive learning network delivers digital making activities for 13-18 year olds, outside or within formal education. One such activity enourages the young participants to consider the 'Internet of Things' through a simple intruder alarm system.

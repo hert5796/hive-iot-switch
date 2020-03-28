@@ -38,8 +38,8 @@ class Manage extends Component {
 
   handleToggle = toggle_state => {
     const { switchName } = this.props;
-    fetch(`https://us-central1-hive-iot-switch.cloudfunctions.net/toggle/${switchName}/${toggle_state ? 'on' : 'off'}`)
-      .then(console.log)
+    fetch(`https://us-central1-hive-iot-switch.cloudfunctions.net/toggle/${switchName}/${toggle_state ? 'on' : 'off'}`, {mode: 'no-cors'})
+      // .then(console.log)
       .catch(console.log)
   }
 
@@ -118,15 +118,15 @@ class Manage extends Component {
                     You don't seem to have a switch set up to manage.
                   </p>
 
-                  <section class="field is-horizontal">
-                    <section class="field-label is-normal">
-                      <label class="label">Switch's name</label>
+                  <section className="field is-horizontal">
+                    <section className="field-label is-normal">
+                      <label className="label">Switch's name</label>
                     </section>
-                    <section class="field-body">
-                      <section class="field has-addons">
-                        <section class="control is-expanded">
+                    <section className="field-body">
+                      <section className="field has-addons">
+                        <section className="control is-expanded">
                           <input
-                            class="input" type="text"
+                            className="input" type="text"
                             value={searchName}
                             placeholder='team-11'
                             onChange={this.handleSearchNameChange} />
@@ -144,7 +144,7 @@ class Manage extends Component {
                       </section>
                     </section>
                   </section>
-                  <p class="help is-danger">
+                  <p className="help is-danger">
                     {!!searchNameErr && searchNameErr}
                   </p>
                   <hr />

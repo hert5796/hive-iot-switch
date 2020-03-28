@@ -16,7 +16,7 @@ class Home extends Component {
                 <p className=''>
                   <Link to='/create'>
                     <button className='button is-warning'>
-                      <span class="icon">
+                      <span className="icon">
                         <FontAwesomeIcon icon={faPlus} />
                       </span>
                       <span>Create a new switch</span>
@@ -26,7 +26,7 @@ class Home extends Component {
                 <p className=''>
                   <Link to='/manage'>
                     <button className='button is-primary'>
-                      <span class="icon">
+                      <span className="icon">
                         <FontAwesomeIcon icon={faPencilAlt} />
                       </span>
                       <span>Manage an existing switch</span>
@@ -36,7 +36,7 @@ class Home extends Component {
                 <p className=''>
                   <Link to='/help'>
                     <button className='button is-dark'>
-                      <span class="icon">
+                      <span className="icon">
                         <FontAwesomeIcon icon={faInfo} />
                       </span>
                       <span>Help</span>

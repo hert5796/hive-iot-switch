@@ -2,7 +2,7 @@
 
 [Hive Manchester website](http://www.hivelearning.net/)
 
-[Web app version](http://hive-iot-switch.web.app/) 
+[Web app version](http://hive-iot-switch.web.app/)
 
 ## Motivation
 
@@ -15,4 +15,63 @@ At some of the previous digital making sessions, a few advanced participants hav
 To solve this issue, I considered a few possibilities and decided to go with the option that should be most convienent for the participants. Since, the project already requires them to use the python requests library to make http requests to Pushbullet's api, this iot-switch simply provides a new http endpoint that acts a toggle switch. The other raspberry pi can then poll the switch for a trigger.
 
 ## Usuage
-The hive-iot-switch app allows users to create and manage a switch intended for use as described above. Once the switch is created, it's ready to use. The manage tab allows uses to manually toggle the switch.
+The hive-iot-switch app allows users to create and manage a switch intended for use as described above. Once the switch is created, it's ready to use. The manage tab allows uses to manually toggle the switch. 
+
+To toggle the switch programmatically, make a get request to
+`https://us-central1-hive-iot-switch.cloudfunctions.net/toggle/SWITCH'S NAME/STATE/`
+
+> * `SWITCH'S NAME` is replaced with the name of the switch you created on the app
+> * `STATE` is replaced with `on` or `off`
+
+To check the status of the switch, make a get request to `https://us-central1-hive-iot-switch.cloudfunctions.net/status/SWITCH'S NAME/`
+
+> * Status is either `active` or `inactive`
+
+## Sample python code
+
+### Toggling
+```python
+import requests
+from time import sleep
+
+# Set the address to the switch
+switch = 'https://us-central1-hive-iot-switch.cloudfunctions.net/toggle/test-switch/' 
+
+# Toggle on
+def toggle_on():
+	requests.get(switch+'on')
+
+# Toggle off
+def toggle_on():
+	requests.get(switch+'off')
+```
+
+### Polling
+```python
+import requests
+from time import sleep
+
+wait = 5 	# Set the original wait time between checks
+motion = False # Set the original state of the sensor
+
+# Set the address to the switch
+switch = 'https://us-central1-hive-iot-switch.cloudfunctions.net/status/test-switch/' 
+
+def check_for_motion(r, *args, **kwargs):
+	global wait
+	if r.text == 'active': 				
+		print('motion detected!')
+		wait = 1
+	elif r.text == 'inactive':
+		print('.')
+		wait = 5
+	else:
+		print('oops! something went wrong.')
+
+# Run check_for_motion once we get a response
+hooks = {'response': check_for_motion}
+
+while True:
+	r = requests.get(switch, hooks=hooks)
+	sleep(wait)
+```

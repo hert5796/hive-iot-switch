@@ -9,3 +9,7 @@
 .ml2{
 	margin-left: 2em;
 }
+
+.is-horizontal-center {
+	justify-content: center;
+}

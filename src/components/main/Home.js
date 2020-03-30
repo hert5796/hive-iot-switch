@@ -15,7 +15,7 @@ class Home extends Component {
                 <figure class="image is-128x128">
                   <img
                     alt='hive-logo'
-                    src="https://media-exp1.licdn.com/dms/image/C560BAQEZY9u-rAiqUA/company-logo_200_200/0?e=2159024400&v=beta&t=gFLkXCJt4IAOMKwaMQ4izD61OFQIwy4qMAZ2grfgx5w" />
+                    src="/hive-logo.png" />
                 </figure>
               </section>
               <h1>Hive IoT switch</h1>

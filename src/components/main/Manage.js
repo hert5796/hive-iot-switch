@@ -38,7 +38,7 @@ class Manage extends Component {
 
   handleToggle = toggle_state => {
     const { switchName } = this.props;
-    fetch(`https://us-central1-hive-iot-switch.cloudfunctions.net/toggle/${switchName}/${toggle_state ? 'on' : 'off'}`, {mode: 'no-cors'})
+    fetch(`https://us-central1-hive-iot-switch.cloudfunctions.net/toggle/${switchName}/${toggle_state ? 'on' : 'off'}`, { mode: 'no-cors' })
       // .then(console.log)
       .catch(console.log)
   }
@@ -47,17 +47,20 @@ class Manage extends Component {
     this.setState({ searchName: event.target.value.toLowerCase() })
   }
 
-  handleSearchName = () => {
+  handleSearchName = event => {
+    event.preventDefault();
     const { searchName } = this.state;
     const { switchName, setSwitchName } = this.props;
-    // final syntactic validation of switchName
-    searchName && getSwitch(searchName,
-      switchData => {
-        if (switchData) {
-          if (switchData.switchName !== switchName) setSwitchName(switchData.name);
-          this.setState({ switchData });
-        } else this.setState({ searchNameErr: 'switch was not found. consider trying again or creating a new switch' })
-      })
+
+    searchName
+      ? getSwitch(searchName,
+        switchData => {
+          if (switchData) {
+            if (switchData.switchName !== switchName) setSwitchName(switchData.name);
+            this.setState({ switchData });
+          } else this.setState({ searchNameErr: 'switch was not found. consider trying again or creating a new switch' })
+        })
+      : this.setState({ searchNameErr: 'switch name was not provided. please enter a name' })
   }
 
   handleReset = () => {
@@ -117,35 +120,34 @@ class Manage extends Component {
                   <p>
                     You don't seem to have a switch set up to manage.
                   </p>
-
-                  <section className="field is-horizontal">
-                    <section className="field-label is-normal">
-                      <label className="label">Switch's name</label>
-                    </section>
-                    <section className="field-body">
-                      <section className="field has-addons">
-                        <section className="control is-expanded">
-                          <input
-                            className="input" type="text"
-                            value={searchName}
-                            placeholder='team-11'
-                            onChange={this.handleSearchNameChange} />
+                  <form onSubmit={this.handleSearchName}>
+                    <section className="field is-horizontal">
+                      <section className="field-label is-normal">
+                        <label className="label">Switch's name</label>
+                      </section>
+                      <section className="field-body">
+                        <section className="field has-addons">
+                          <section className="control is-expanded">
+                            <input
+                              className="input" type="text"
+                              value={searchName}
+                              placeholder='team-11'
+                              onChange={this.handleSearchNameChange} />
+                          </section>
+                          <section className='control'>
+                            <button className='button is-warning' type='submit'>
+                              <span className="icon">
+                                <FontAwesomeIcon icon={faSearch} />
+                              </span>
+                              <span>Search</span>
+                            </button>
+                          </section>
                         </section>
-                        <section className='control'>
-                          <button className='button is-warning' onClick={this.handleSearchName}>
-                            <span className="icon">
-                              <FontAwesomeIcon icon={faSearch} />
-                            </span>
-                            <span>Search</span>
-                          </button>
-                        </section>
-                        {/* <section className='control'>
-                        </section> */}
                       </section>
                     </section>
-                  </section>
+                  </form>
                   <p className="help is-danger">
-                    {!!searchNameErr && searchNameErr}
+                    {!!searchNameErr && <span>* {searchNameErr}</span>}
                   </p>
                   <hr />
                   <Link to='/create'>
